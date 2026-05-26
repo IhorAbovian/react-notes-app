@@ -1,42 +1,23 @@
-const Sidebar = () => {
-  const notes = [
-    {
-      id: 1,
-      title: "Daily Plan",
-      body: "Finish the header, build the sidebar, and check the layout.",
-    },
-    {
-      id: 2,
-      title: "App Idea",
-      body: "A notes app with search, filtering, and sorting.",
-    },
-    {
-      id: 3,
-      title: "Shopping List",
-      body: "Milk, bread, coffee, cheese, eggs.",
-    },
-    {
-      id: 4,
-      title: "Project Tasks",
-      body: "Create the two-column layout and connect note data.",
-    },
-    {
-      id: 5,
-      title: "Important",
-      body: "Check responsiveness and make the active note look better.",
-    },
-  ];
+import type { Note } from "../../App";
 
+type SidebarProps = {
+  notes: Note[];
+};
+
+const Sidebar = ({ notes }: SidebarProps) => {
   return (
-    <aside className="sidebar flex h-full w-72 flex-col border-r border-gray-300 cursor-pointer">
+    <aside className="sidebar flex h-full w-72 flex-col border-r border-gray-300 bg-gray-50">
       <div className="p-4">
         <h2 className="mb-4 text-lg font-semibold">My Notes</h2>
 
         <div className="space-y-3">
           {notes.map((note) => (
-            <div key={note.id} className="rounded border border-gray-200 p-3">
+            <div
+              key={note.id}
+              className="rounded border border-gray-200 bg-white p-3 hover:border-blue-400 cursor-pointer"
+            >
               <h3 className="font-medium">{note.title}</h3>
-              <p className="text-sm text-gray-500">{note.body}</p>
+              <p className="text-sm text-gray-400">Empty note...</p>
             </div>
           ))}
         </div>
