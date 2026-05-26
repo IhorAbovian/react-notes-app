@@ -1,4 +1,21 @@
+import { useState } from "react";
+
 const Header = () => {
+  type Note = {
+    id: number;
+    title: string;
+    body: string;
+  };
+
+  const [newNote, setNewNote] = useState<Note[]>([]);
+  const [text, setText] = useState("");
+
+  const addNote = () => {
+    if (!text.trim()) return;
+    setNewNote([...newNote, { id: Date.now(), title: text, body: "" }]);
+    setText("");
+  };
+
   return (
     <header className="header border-b-1 border-gray-300  p-2 flex items-center sticky top-0 bg-white z-10">
       <form className="w-full flex items-center justify-between">
@@ -19,11 +36,17 @@ const Header = () => {
           <input
             type="text"
             placeholder="Search"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
             className="border rounded border-gray-100 bg-gray-100 py-2 pl-9 pr-4 placeholder:text-gray-400 w-72 focus:outline-none"
           />
         </div>
         <button
           type="submit"
+          onClick={(e) => {
+            e.preventDefault();
+            addNote();
+          }}
           className="px-4 py-2 bg-blue-500 text-white rounded mr-70 cursor-pointer"
         >
           New Note
