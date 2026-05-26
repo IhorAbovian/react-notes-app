@@ -1,6 +1,6 @@
 const Header = () => {
   return (
-    <header className="header border-b-1 border-gray-300  p-2 flex items-center ">
+    <header className="header border-b-1 border-gray-300  p-2 flex items-center sticky top-0 bg-white z-10">
       <form className="w-full flex items-center justify-between">
         <div className="relative inline-block ml-70">
           <svg
