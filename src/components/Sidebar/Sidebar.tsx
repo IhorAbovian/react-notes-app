@@ -6,7 +6,7 @@ type SidebarProps = {
 
 const Sidebar = ({ notes }: SidebarProps) => {
   return (
-    <aside className="sidebar flex h-full w-72 flex-col border-r border-gray-300 bg-gray-50">
+    <aside className="sidebar flex h-screen w-72 flex-col border-r border-gray-300 bg-gray-50">
       <div className="p-4">
         <h2 className="mb-4 text-lg font-semibold">My Notes</h2>
 
