@@ -1,8 +1,23 @@
+import { useRef, useState } from "react";
+
 type HeaderProps = {
   addNote: () => void;
 };
 
 const Header = ({ addNote }: HeaderProps) => {
+  const [isActive, setIsActive] = useState(false);
+  const titleInputRef = useRef<HTMLInputElement>(null);
+
+  const handleAddNote = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setIsActive(true);
+    addNote();
+
+    setTimeout(() => {
+      titleInputRef.current?.focus();
+    }, 0);
+  };
+
   return (
     <header className="header border-b-1 border-gray-300  p-2 flex items-center sticky top-0 bg-white z-10">
       <form className="w-full flex items-center justify-between">
@@ -28,11 +43,13 @@ const Header = ({ addNote }: HeaderProps) => {
         </div>
         <button
           type="button"
-          onClick={(e) => {
-            e.preventDefault();
-            addNote();
-          }}
-          className="px-4 py-2 bg-blue-500 text-white rounded mr-70 cursor-pointer"
+          onClick={handleAddNote}
+          disabled={isActive}
+          className={`px-4 py-2 rounded mr-70 cursor-pointer transition-colors ${
+            isActive
+              ? "bg-blue-300 text-gray-400 cursor-not-allowed"
+              : "bg-blue-500 text-white hover:bg-blue-600"
+          }`}
         >
           New Note
         </button>

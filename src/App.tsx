@@ -14,7 +14,7 @@ function App() {
   const addNote = () => {
     const newNote = {
       id: Date.now(),
-      title: `Note ${notes.length + 1}`,
+      title: `Note`,
       body: "",
     };
     setNotes([newNote, ...notes]);
