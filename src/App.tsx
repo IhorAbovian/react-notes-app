@@ -10,17 +10,22 @@ export type Note = {
 };
 
 function App() {
-  const [notes] = useState<Note[]>([]);
+  const [notes, setNote] = useState<Note[]>([]);
   const [isCreatingNote, setIsCreatingNote] = useState(false);
 
   const addNote = () => {
-    setIsCreatingNote(true);
+    const newNote = {
+      id: Date.now(),
+      title: "",
+      body: "",
+    };
+    setNote([newNote, ...notes]);
   };
 
   return (
     <div>
       <Header addNote={addNote} />
-      <Sidebar notes={notes} />
+      <Sidebar notes={notes} addNote={addNote} />
       <MainContent isCreatingNote={isCreatingNote} onSave={setIsCreatingNote} />
     </div>
   );

@@ -2,6 +2,7 @@ import type { Note } from "../../App";
 
 type SidebarProps = {
   notes: Note[];
+  addNote: () => void;
 };
 
 const Sidebar = ({ notes }: SidebarProps) => {
