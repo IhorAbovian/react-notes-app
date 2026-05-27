@@ -10,8 +10,8 @@ export type Note = {
 };
 
 function App() {
-  const [notes, setNote] = useState<Note[]>([]);
-  const [isCreatingNote, setIsCreatingNote] = useState(false);
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [activeNoteId, setActiveNoteId] = useState<number | null>(null);
 
   const addNote = () => {
     const newNote = {
@@ -19,14 +19,25 @@ function App() {
       title: "",
       body: "",
     };
-    setNote([newNote, ...notes]);
+    setNotes([newNote, ...notes]);
+    setActiveNoteId(newNote.id);
+  };
+
+  const updateNoteTitle = (id: number, title: string) => {
+    setNotes((prevNotes) =>
+      prevNotes.map((note) => (note.id === id ? { ...note, title } : note)),
+    );
   };
 
   return (
     <div>
       <Header addNote={addNote} />
       <Sidebar notes={notes} addNote={addNote} />
-      <MainContent isCreatingNote={isCreatingNote} onSave={setIsCreatingNote} />
+      <MainContent
+        activeNoteId={activeNoteId}
+        notes={notes}
+        updateNoteTitle={updateNoteTitle}
+      />
     </div>
   );
 }
