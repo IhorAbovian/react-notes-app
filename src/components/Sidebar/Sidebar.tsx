@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../../utils/constants";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 
 type Note = {
   id: string;
@@ -28,6 +28,10 @@ const fetchNotes = async () => {
 const Sidebar = () => {
   const [notes, setNotes] = useState<Note[]>([]);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const selectedNoteId = searchParams.get("selectedNoteId");
+
+  console.log("selectedNoteId:", selectedNoteId);
 
   useEffect(() => {
     (async () => {
@@ -37,6 +41,7 @@ const Sidebar = () => {
   }, []);
 
   const handleNoteClick = (noteId: string) => {
+    console.log("Clicked:", noteId);
     navigate(`?selectedNoteId=${noteId}`);
   };
 
@@ -50,7 +55,11 @@ const Sidebar = () => {
             <div
               key={note.id}
               onClick={() => handleNoteClick(note.id)}
-              className="rounded border border-gray-200 bg-white p-3 hover:border-blue-400 cursor-pointer"
+              className={`rounded border p-3 hover:border-blue-400 cursor-pointer transition-colors ${
+                selectedNoteId === note.id
+                  ? "bg-blue-100 border-blue-400"
+                  : "bg-white border-gray-200"
+              }`}
             >
               <h3 className="font-medium">{note.title}</h3>
               <p className="text-sm text-gray-400 truncate">{note.body}</p>
