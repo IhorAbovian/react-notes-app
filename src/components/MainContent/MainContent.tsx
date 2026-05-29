@@ -1,41 +1,37 @@
-import { useRef, useEffect } from "react";
+import { useState } from "react";
+import { useSearchParams } from "react-router";
+import type { Note } from "../../Pages/MainPage.tsx";
 
-type MainContentProps = {
-  activeNoteId: number | null;
-  notes: { id: number; title: string; body: string }[];
-  updateNoteTitle: (id: number, title: string) => void;
-};
+// const fetchNote = async () => {
+//   try {
+//     const notesResponse = await fetch(`${BACKEND_URL}/notes`);
 
-const MainContent = ({
-  activeNoteId,
-  notes,
-  updateNoteTitle,
-}: MainContentProps) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const activeNote = notes.find((note) => note.id === activeNoteId);
+//     if (!notesResponse.ok) {
+//       throw notesResponse.status;
+//     }
 
-  useEffect(() => {
-    if (activeNoteId !== null) {
-      inputRef.current?.focus();
-    }
-  }, [activeNoteId]);
+//     const notes = await notesResponse.json();
 
-  if (!activeNote) return <main className="flex-1" />;
+//     return { data: notes as Note[], error: null };
+//   } catch (error) {
+//     console.log("Error!", error);
+//     return { data: [], error };
+//   }
+// };
+
+const MainContent = () => {
+  const [selectedNote] = useState<Note | null>(null);
+
+  const [searchParams] = useSearchParams();
+  const selectedNoteId = searchParams.get("selectedNoteId");
 
   return (
-    <main className="flex-1 p-4 flex items-center">
-      <input
-        ref={inputRef}
-        type="text"
-        placeholder="Title"
-        value={activeNote.title}
-        onChange={(e) => updateNoteTitle(activeNote.id, e.target.value)}
-        className="outline-none text-2xl font-semibold mr-2"
-        style={{
-          width: "auto",
-          minWidth: 100,
-        }}
-      />
+    <main className="flex-1 p-4">
+      {!selectedNoteId && <p className="text-gray-400">Please select a note</p>}
+
+      {selectedNoteId && selectedNote && (
+        <p className="text-gray-400">Note content...</p>
+      )}
     </main>
   );
 };
