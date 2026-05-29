@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../../utils/constants";
+import { useNavigate } from "react-router";
 
 type Note = {
   id: string;
@@ -26,6 +27,7 @@ const fetchNotes = async () => {
 
 const Sidebar = () => {
   const [notes, setNotes] = useState<Note[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
@@ -33,6 +35,10 @@ const Sidebar = () => {
       setNotes(data);
     })();
   }, []);
+
+  const handleNoteClick = (noteId: string) => {
+    navigate(`?selectedNoteId=${noteId}`);
+  };
 
   return (
     <aside className="sidebar flex h-screen w-72 flex-col border-r border-gray-300 bg-gray-50">
@@ -43,6 +49,7 @@ const Sidebar = () => {
           {notes.map((note) => (
             <div
               key={note.id}
+              onClick={() => handleNoteClick(note.id)}
               className="rounded border border-gray-200 bg-white p-3 hover:border-blue-400 cursor-pointer"
             >
               <h3 className="font-medium">{note.title}</h3>
