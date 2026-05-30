@@ -1,6 +1,6 @@
 import type { SubmitEvent } from "react";
 import { useNavigate } from "react-router";
-import { BACKEND_URL } from "../utils/constants";
+import { BACKEND_URL } from "../utils/constants.ts";
 import type { Note } from "./MainPage.tsx";
 
 type CreateNoteData = {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
-import type { Note } from "../../Pages/MainPage.tsx";
+import type { Note } from "../../pages/MainPage.tsx";
 import { BACKEND_URL } from "../../utils/constants";
 
 const fetchNote = async (id: string) => {
