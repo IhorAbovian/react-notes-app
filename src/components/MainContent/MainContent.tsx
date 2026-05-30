@@ -20,7 +20,7 @@ const fetchNote = async (id: string) => {
   }
 };
 
-const MainContent = () => {
+const MainContent = ({ onNoteDeleted }: { onNoteDeleted: () => void }) => {
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
 
   const [searchParams] = useSearchParams();
@@ -45,9 +45,10 @@ const MainContent = () => {
   const handleDelete = async () => {
     if (!selectedNote) return;
     await deleteNote(selectedNote.id);
-    ``;
+
     setSearchParams({});
     setSelectedNote(null);
+    onNoteDeleted();
   };
 
   return (

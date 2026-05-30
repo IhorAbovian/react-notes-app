@@ -25,7 +25,7 @@ const fetchNotes = async () => {
   }
 };
 
-const Sidebar = () => {
+const Sidebar = ({ refreshKey }: { refreshKey: number }) => {
   const [notes, setNotes] = useState<Note[]>([]);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -38,7 +38,7 @@ const Sidebar = () => {
       const { data } = await fetchNotes();
       setNotes(data);
     })();
-  }, []);
+  }, [refreshKey]);
 
   const handleNoteClick = (noteId: string) => {
     console.log("Clicked:", noteId);
