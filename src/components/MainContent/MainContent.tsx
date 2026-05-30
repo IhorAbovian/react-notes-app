@@ -36,12 +36,39 @@ const MainContent = () => {
     });
   }, [selectedNoteId]);
 
+  const deleteNote = async (id: string) => {
+    await fetch(`${BACKEND_URL}/notes/${id}`, { method: "DELETE" });
+  };
+
+  const [, setSearchParams] = useSearchParams();
+
+  const handleDelete = async () => {
+    if (!selectedNote) return;
+    await deleteNote(selectedNote.id);
+    ``;
+    setSearchParams({});
+    setSelectedNote(null);
+  };
+
   return (
     <main className="flex-1 p-4">
       {!selectedNoteId && <p className="text-gray-400">Please select a note</p>}
 
       {selectedNote && (
         <div>
+          <h1 className="text-2xl font-bold mb-2">{selectedNote.title}</h1>
+          <p className="text-gray-700">{selectedNote.body}</p>
+        </div>
+      )}
+
+      {selectedNote && (
+        <div className="relative">
+          <button
+            onClick={handleDelete}
+            className="absolute top-0 right-0 text-red-500 hover:text-red-700 cursor-pointer"
+          >
+            Delete
+          </button>
           <h1 className="text-2xl font-bold mb-2">{selectedNote.title}</h1>
           <p className="text-gray-700">{selectedNote.body}</p>
         </div>
