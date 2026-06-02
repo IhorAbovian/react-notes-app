@@ -1,48 +1,31 @@
-import { useEffect, useState } from "react";
-import { BACKEND_URL } from "../../utils/constants";
+import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router";
+import { fetchNotes } from "../../api/fetches";
+import { useNotes } from "../../state/notes";
 
-type Note = {
-  id: string;
-  title: string;
-  body: string;
-};
+const Sidebar = () => {
+  const { notes, isFetched, setNotes } = useNotes();
 
-const fetchNotes = async () => {
-  try {
-    const notesResponse = await fetch(`${BACKEND_URL}/notes`);
-
-    if (!notesResponse.ok) {
-      throw notesResponse.status;
-    }
-
-    const notes = await notesResponse.json();
-
-    return { data: notes as Note[], error: null };
-  } catch (error) {
-    console.log("Error!", error);
-    return { data: [], error };
-  }
-};
-
-const Sidebar = ({ refreshKey }: { refreshKey: number }) => {
-  const [notes, setNotes] = useState<Note[]>([]);
   const navigate = useNavigate();
+
   const [searchParams] = useSearchParams();
   const selectedNoteId = searchParams.get("selectedNoteId");
 
-  console.log("selectedNoteId:", selectedNoteId);
-
   useEffect(() => {
+    if (isFetched) return;
+
     (async () => {
       const { data } = await fetchNotes();
       setNotes(data);
     })();
-  }, [refreshKey]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFetched]);
 
   const handleNoteClick = (noteId: string) => {
-    console.log("Clicked:", noteId);
-    navigate(`?selectedNoteId=${noteId}`);
+    navigate({
+      pathname: "/",
+      search: `?selectedNoteId=${noteId}`,
+    });
   };
 
   return (

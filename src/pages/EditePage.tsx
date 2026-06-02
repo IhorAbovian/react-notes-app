@@ -1,14 +1,34 @@
-import type { SubmitEvent } from "react";
-import { useNavigate } from "react-router";
-import { createNote } from "../api/fetches.ts";
+import { useEffect, useState, type SubmitEvent } from "react";
+import { useNavigate, useParams } from "react-router";
+import { fetchNote, updateNote, type Note } from "../api/fetches.ts";
 import { useNotes } from "../state/notes.ts";
 
-export const AddPage = () => {
+export const EditPage = () => {
   const navigate = useNavigate();
-  const { addNote } = useNotes();
+  const { editNote } = useNotes();
+
+  const { noteId } = useParams();
+
+  const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+
+  useEffect(() => {
+    if (!noteId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setSelectedNote(null);
+      return;
+    }
+
+    fetchNote(noteId).then(({ data }) => {
+      setSelectedNote(data);
+    });
+  }, [noteId]);
 
   const handleSubmit = async (event: SubmitEvent) => {
     event.preventDefault();
+
+    if (!noteId) {
+      return;
+    }
 
     const form = event.target as HTMLFormElement;
 
@@ -24,22 +44,22 @@ export const AddPage = () => {
       return;
     }
 
-    const createNoteData = {
+    const updateNoteData = {
       title,
       body,
     };
 
-    createNote(createNoteData).then(({ data, error }) => {
+    updateNote(noteId, updateNoteData).then(({ data, error }) => {
       if (data) {
-        addNote(data);
+        editNote(data);
         navigate({
           pathname: "/",
-          search: `?selectedNoteId=${data.id}`,
+          search: `?selectedNoteId=${noteId}`,
         });
       }
 
       if (error) {
-        alert("Failed to create a note!");
+        alert("Failed to update the note!");
       }
     });
   };
@@ -52,6 +72,7 @@ export const AddPage = () => {
         className="border p-1"
         placeholder="Title"
         required
+        defaultValue={selectedNote?.title}
       />
 
       <textarea
@@ -59,6 +80,7 @@ export const AddPage = () => {
         className="border p-1"
         placeholder="Body"
         required
+        defaultValue={selectedNote?.body}
       ></textarea>
 
       <div className="flex gap-2">
