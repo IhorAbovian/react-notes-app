@@ -41,15 +41,15 @@ const MainContent = () => {
   };
 
   return (
-    <main className="flex flex-1 flex-col bg-slate-950 min-h-[calc(100vh-57px)]">
+    <main className="flex flex-1 flex-col bg-white min-h-[calc(100vh-57px)]">
       {!selectedNoteId && (
         <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
-          <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-slate-800 text-4xl">
+          <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gray-100 text-4xl">
             📝
           </div>
           <div>
-            <p className="text-lg font-medium text-slate-300">Select a note</p>
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="text-lg font-medium text-gray-700">Select a note</p>
+            <p className="mt-1 text-sm text-gray-400">
               Choose a note from the sidebar or create a new one
             </p>
           </div>
@@ -61,7 +61,7 @@ const MainContent = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-indigo-400" />
-              <span className="text-xs text-slate-500 uppercase tracking-wider font-medium">
+              <span className="text-xs text-gray-400 uppercase tracking-wider font-medium">
                 Note
               </span>
             </div>
@@ -69,7 +69,7 @@ const MainContent = () => {
             <div className="flex items-center gap-2">
               <Link
                 to={`/edit/${selectedNote.id}`}
-                className="flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-indigo-500 hover:text-indigo-300"
+                className="flex items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-1.5 text-sm text-gray-600 hover:border-indigo-300 hover:text-indigo-600"
               >
                 <svg
                   className="h-3.5 w-3.5"
@@ -89,7 +89,7 @@ const MainContent = () => {
 
               <button
                 onClick={handleDelete}
-                className="flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-red-500 hover:text-red-400 cursor-pointer"
+                className="flex items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-1.5 text-sm text-gray-600 hover:border-red-300 hover:text-red-500 cursor-pointer"
               >
                 <svg
                   className="h-3.5 w-3.5"
@@ -110,13 +110,13 @@ const MainContent = () => {
           </div>
 
           <div>
-            <h2 className="text-3xl font-bold text-white leading-tight">
+            <h2 className="text-3xl font-bold text-gray-900 leading-tight">
               {selectedNote.title}
             </h2>
           </div>
 
-          <div className="border-t border-slate-800 pt-6">
-            <p className="text-slate-300 leading-relaxed whitespace-pre-wrap">
+          <div className="border-t border-gray-100 pt-6">
+            <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
               {selectedNote.body}
             </p>
           </div>
