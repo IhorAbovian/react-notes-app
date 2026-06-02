@@ -10,6 +10,11 @@ type NotesStore = {
   editNote: (updatedNote: Note) => void;
 };
 
+type FiltersStore = {
+  query: string;
+  setQuery: (query: string) => void;
+};
+
 export const useNotes = create<NotesStore>((set) => {
   return {
     notes: [],
@@ -31,3 +36,9 @@ export const useNotes = create<NotesStore>((set) => {
       })),
   };
 });
+
+
+export const useFilters = create<FiltersStore>((set) => ({
+  query: "",
+  setQuery: (query) => set({ query }),
+}));
