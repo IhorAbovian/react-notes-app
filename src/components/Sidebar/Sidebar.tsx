@@ -1,16 +1,12 @@
 import { useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router";
 import { fetchNotes } from "../../api/fetches";
 import { useNotes, useFilters } from "../../state/notes";
 
 const Sidebar = () => {
-  const { notes, isFetched, setNotes } = useNotes();
   const { query } = useFilters();
 
-  const navigate = useNavigate();
-
-  const [searchParams] = useSearchParams();
-  const selectedNoteId = searchParams.get("selectedNoteId");
+  const { notes, isFetched, setNotes, selectedNoteId, setSelectedNoteId } =
+    useNotes();
 
   useEffect(() => {
     if (isFetched) return;
@@ -23,10 +19,7 @@ const Sidebar = () => {
   }, [isFetched]);
 
   const handleNoteClick = (noteId: string) => {
-    navigate({
-      pathname: "/",
-      search: `?selectedNoteId=${noteId}`,
-    });
+    setSelectedNoteId(noteId);
   };
 
   const filteredNotes = notes.filter(

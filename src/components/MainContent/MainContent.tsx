@@ -1,14 +1,11 @@
 import { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router";
+import { Link } from "react-router";
 import { deleteNote, fetchNote, type Note } from "../../api/fetches.ts";
 import { useNotes } from "../../state/notes.ts";
 
 const MainContent = () => {
-  const { removeNote } = useNotes();
+  const { removeNote, selectedNoteId, setSelectedNoteId } = useNotes();
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
-
-  const [searchParams, setSearchParams] = useSearchParams();
-  const selectedNoteId = searchParams.get("selectedNoteId");
 
   useEffect(() => {
     if (!selectedNoteId) {
@@ -36,7 +33,7 @@ const MainContent = () => {
 
     removeNote(selectedNote.id);
 
-    setSearchParams({});
+    setSelectedNoteId(null);
     setSelectedNote(null);
   };
 

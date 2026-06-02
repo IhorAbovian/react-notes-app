@@ -2,6 +2,8 @@ import { create } from "zustand";
 import type { Note } from "../api/fetches";
 
 type NotesStore = {
+  selectedNoteId: string | null;
+  setSelectedNoteId: (id: string | null) => void;
   notes: Note[];
   isFetched: boolean;
   setNotes: (notes: Note[]) => void;
@@ -19,7 +21,9 @@ export const useNotes = create<NotesStore>((set) => {
   return {
     notes: [],
     isFetched: false,
-    setNotes: (notes: Note[]) => set({ notes, isFetched: true }), // ideally should be called only once
+    selectedNoteId: null,
+    setSelectedNoteId: (selectedNoteId) => set({ selectedNoteId }), // добавить эту строку
+    setNotes: (notes: Note[]) => set({ notes, isFetched: true }),
     removeNote: (id: string) =>
       set((state) => ({
         notes: state.notes.filter((note: Note) => note.id !== id),
@@ -36,7 +40,6 @@ export const useNotes = create<NotesStore>((set) => {
       })),
   };
 });
-
 
 export const useFilters = create<FiltersStore>((set) => ({
   query: "",
