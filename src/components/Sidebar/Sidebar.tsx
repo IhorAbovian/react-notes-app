@@ -29,26 +29,54 @@ const Sidebar = () => {
   };
 
   return (
-    <aside className="sidebar flex h-screen w-72 flex-col border-r border-gray-300 bg-gray-50">
-      <div className="p-4">
-        <h2 className="mb-4 text-lg font-semibold">My Notes</h2>
+    <aside className="flex h-[calc(100vh-57px)] w-72 shrink-0 flex-col border-r border-slate-700 bg-slate-900">
+      <div className="flex items-center justify-between border-b border-slate-700 px-4 py-3">
+        <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400">
+          My Notes
+        </h2>
+        <span className="rounded-full bg-slate-700 px-2 py-0.5 text-xs text-slate-300">
+          {notes.length}
+        </span>
+      </div>
 
-        <div className="space-y-3">
-          {notes.map((note) => (
-            <div
-              key={note.id}
-              onClick={() => handleNoteClick(note.id)}
-              className={`rounded border p-3 hover:border-blue-400 cursor-pointer transition-colors ${
-                selectedNoteId === note.id
-                  ? "bg-blue-100 border-blue-400"
-                  : "bg-white border-gray-200"
-              }`}
-            >
-              <h3 className="font-medium">{note.title}</h3>
-              <p className="text-sm text-gray-400 truncate">{note.body}</p>
+      <div className="flex-1 overflow-y-auto p-3 space-y-1">
+        {notes.length === 0 && (
+          <p className="mt-8 text-center text-sm text-slate-500">
+            No notes yet. Create one!
+          </p>
+        )}
+
+        {notes.map((note) => (
+          <div
+            key={note.id}
+            onClick={() => handleNoteClick(note.id)}
+            className={`group cursor-pointer rounded-lg p-3 transition-all ${
+              selectedNoteId === note.id
+                ? "bg-indigo-500/20 ring-1 ring-indigo-500"
+                : "hover:bg-slate-800"
+            }`}
+          >
+            <div className="flex items-start justify-between gap-2">
+              <h3
+                className={`text-sm font-medium leading-snug ${
+                  selectedNoteId === note.id
+                    ? "text-indigo-300"
+                    : "text-slate-200"
+                }`}
+              >
+                {note.title}
+              </h3>
+              <span
+                className={`mt-0.5 shrink-0 h-1.5 w-1.5 rounded-full ${
+                  selectedNoteId === note.id ? "bg-indigo-400" : "bg-slate-600"
+                }`}
+              />
             </div>
-          ))}
-        </div>
+            <p className="mt-1 text-xs text-slate-500 line-clamp-2">
+              {note.body}
+            </p>
+          </div>
+        ))}
       </div>
     </aside>
   );
