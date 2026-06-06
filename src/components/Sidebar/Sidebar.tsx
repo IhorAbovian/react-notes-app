@@ -1,12 +1,15 @@
 import { useEffect } from "react";
 import { fetchNotes } from "../../api/fetches";
-import { useNotes, useFilters } from "../../state/notes";
-import { useNavigate, useParams } from "react-router";
+import { useNotes } from "../../state/notes";
+import { useNavigate, useParams, useSearchParams } from "react-router";
 
 const Sidebar = () => {
-  const { query } = useFilters();
+  // const { query } = useFilters();
   const navigate = useNavigate();
   const { noteId } = useParams();
+
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get("query") || "";
 
   const { notes, isFetched, setNotes } = useNotes();
 

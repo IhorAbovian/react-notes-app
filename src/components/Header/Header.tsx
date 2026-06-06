@@ -1,8 +1,25 @@
 import { Link } from "react-router";
-import { useFilters } from "../../state/notes";
+import { useSearchParams } from "react-router";
+
+// import { useFilters } from "../../state/notes";
 
 const Header = () => {
-  const { setQuery } = useFilters();
+  // const { setQuery } = useFilters();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const query = event.target.value;
+    setSearchParams({ query });
+
+    if (query) {
+      searchParams.set("query", query);
+    } else {
+      searchParams.delete("query");
+    }
+
+    setSearchParams(searchParams);
+  };
+
   return (
     <header className="sticky top-0 z-10 border-b border-gray-200 bg-white px-6 py-3">
       <div className="mx-auto flex max-w-screen-xl items-center justify-between gap-6">
@@ -34,7 +51,7 @@ const Header = () => {
             <input
               type="search"
               placeholder="Search notes..."
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={handleSearch}
               className="w-full rounded-lg border border-gray-200 bg-gray-50 py-2 pl-9 pr-4 text-sm text-gray-800 placeholder:text-gray-400"
             />
           </div>
