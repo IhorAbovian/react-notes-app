@@ -52,10 +52,7 @@ export const EditPage = () => {
     updateNote(noteId, updateNoteData).then(({ data, error }) => {
       if (data) {
         editNote(data);
-        navigate({
-          pathname: "/",
-          search: `?selectedNoteId=${noteId}`,
-        });
+        navigate(`/${noteId}`);
       }
 
       if (error) {

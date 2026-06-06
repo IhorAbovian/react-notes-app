@@ -1,23 +1,26 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router";
+import { Link, useParams, useNavigate } from "react-router";
 import { deleteNote, fetchNote, type Note } from "../../api/fetches.ts";
 import { useNotes } from "../../state/notes.ts";
 
 const MainContent = () => {
-  const { removeNote, selectedNoteId, setSelectedNoteId } = useNotes();
+  const { removeNote } = useNotes();
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+  const navigate = useNavigate();
+
+  const { noteId } = useParams();
 
   useEffect(() => {
-    if (!selectedNoteId) {
+    if (!noteId) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedNote(null);
       return;
     }
 
-    fetchNote(selectedNoteId).then(({ data }) => {
+    fetchNote(noteId).then(({ data }) => {
       setSelectedNote(data);
     });
-  }, [selectedNoteId]);
+  }, [noteId]);
 
   const handleDelete = async () => {
     const isConfirmed = confirm("Are you sure you want to delete this note?");
@@ -33,13 +36,13 @@ const MainContent = () => {
 
     removeNote(selectedNote.id);
 
-    setSelectedNoteId(null);
     setSelectedNote(null);
+    navigate("/");
   };
 
   return (
     <main className="flex flex-1 flex-col bg-white min-h-[calc(100vh-57px)]">
-      {!selectedNoteId && (
+      {!noteId && (
         <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
           <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gray-100 text-4xl">
             📝

@@ -1,12 +1,14 @@
 import { useEffect } from "react";
 import { fetchNotes } from "../../api/fetches";
 import { useNotes, useFilters } from "../../state/notes";
+import { useNavigate, useParams } from "react-router";
 
 const Sidebar = () => {
   const { query } = useFilters();
+  const navigate = useNavigate();
+  const { noteId } = useParams();
 
-  const { notes, isFetched, setNotes, selectedNoteId, setSelectedNoteId } =
-    useNotes();
+  const { notes, isFetched, setNotes } = useNotes();
 
   useEffect(() => {
     if (isFetched) return;
@@ -18,8 +20,8 @@ const Sidebar = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFetched]);
 
-  const handleNoteClick = (noteId: string) => {
-    setSelectedNoteId(noteId);
+  const handleNoteClick = (id: string) => {
+    navigate(`/${id}`);
   };
 
   const filteredNotes = notes.filter(
@@ -49,14 +51,14 @@ const Sidebar = () => {
             key={note.id}
             onClick={() => handleNoteClick(note.id)}
             className={`cursor-pointer rounded-lg p-3 ${
-              selectedNoteId === note.id
+              noteId === note.id
                 ? "bg-indigo-50 border border-indigo-200"
                 : "hover:bg-gray-100"
             }`}
           >
             <h3
               className={`text-sm font-medium ${
-                selectedNoteId === note.id ? "text-indigo-700" : "text-gray-800"
+                noteId === note.id ? "text-indigo-700" : "text-gray-800"
               }`}
             >
               {note.title}

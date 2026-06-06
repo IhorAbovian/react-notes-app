@@ -32,10 +32,7 @@ export const AddPage = () => {
     createNote(createNoteData).then(({ data, error }) => {
       if (data) {
         addNote(data);
-        navigate({
-          pathname: "/",
-          search: `?selectedNoteId=${data.id}`,
-        });
+        navigate(`/${data.id}`);
       }
 
       if (error) {
