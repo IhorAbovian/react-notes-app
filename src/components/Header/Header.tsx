@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { useSearchParams } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faClipboardList } from "@fortawesome/free-solid-svg-icons";
 
 // import { useFilters } from "../../state/notes";
 
@@ -29,8 +29,8 @@ const Header = () => {
           to="/"
           className="flex items-center gap-2 text-xl font-bold tracking-tight text-gray-900"
         >
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-100 text-sm">
-            📝
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
+            <FontAwesomeIcon icon={faClipboardList} />
           </span>
           NotesApp
         </Link>
