@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { fetchNotes } from "../../api/fetches";
 import { useNotes } from "../../state/notes";
-import { useNavigate, useParams, useSearchParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 const Sidebar = () => {
   // const { query } = useFilters();
@@ -9,29 +9,24 @@ const Sidebar = () => {
   const { noteId } = useParams();
 
   const [searchParams] = useSearchParams();
-  const query = searchParams.get("query") || "";
 
-  const { notes, isFetched, setNotes } = useNotes();
+  const { notes, setNotes } = useNotes();
 
   useEffect(() => {
-    if (isFetched) return;
+    const query = searchParams.get("query") || "";
 
     (async () => {
-      const { data } = await fetchNotes();
+      const { data } = await fetchNotes({
+        query,
+      });
+
       setNotes(data);
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFetched]);
+  }, [searchParams]);
 
   const handleNoteClick = (id: string) => {
     navigate(`/${id}`);
   };
-
-  const filteredNotes = notes.filter(
-    (note) =>
-      note.title.toLowerCase().includes(query.toLowerCase()) ||
-      note.body.toLowerCase().includes(query.toLowerCase()),
-  );
 
   return (
     <aside className="flex h-[calc(100vh-57px)] w-72 shrink-0 flex-col border-r border-gray-200 bg-gray-50">
@@ -43,13 +38,13 @@ const Sidebar = () => {
       </div>
 
       <div className="flex-1 overflow-y-auto p-3 space-y-1">
-        {filteredNotes.length === 0 && (
+        {notes.length === 0 && (
           <p className="mt-8 text-center text-sm text-gray-400">
             No notes yet. Create one!
           </p>
         )}
 
-        {filteredNotes.map((note) => (
+        {notes.map((note) => (
           <div
             key={note.id}
             onClick={() => handleNoteClick(note.id)}

@@ -23,7 +23,7 @@ export const useNotes = create<NotesStore>((set) => {
     isFetched: false,
     selectedNote: null,
     setSelectedNote: (selectedNote) => set({ selectedNote }),
-    setNotes: (notes: Note[]) => set({ notes, isFetched: true }),
+    setNotes: (notes: Note[]) => set({ notes }),
     removeNote: (id: string) =>
       set((state) => ({
         notes: state.notes.filter((note: Note) => note.id !== id),

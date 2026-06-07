@@ -11,9 +11,16 @@ export type Note = {
   body: string;
 };
 
-export const fetchNotes = async () => {
+export const fetchNotes = async (options?: { query?: string }) => {
+  const { query = "" } = options || {};
   try {
-    const notesResponse = await fetch(`${BACKEND_URL}/notes`);
+    let url = `${BACKEND_URL}/notes`;
+
+    if (query) {
+      url += `?title:contains=${encodeURIComponent(query)}`;
+    }
+
+    const notesResponse = await fetch(url);
 
     if (!notesResponse.ok) {
       throw notesResponse.status;

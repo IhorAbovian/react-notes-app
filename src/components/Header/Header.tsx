@@ -13,7 +13,14 @@ const Header = () => {
     event.preventDefault();
     const formData = new FormData(event.target as HTMLFormElement);
     const searchQuery = (formData.get("search") as string) || "";
-    setSearchParams({ query: searchQuery });
+
+    if (searchQuery) {
+      setSearchParams({ query: searchQuery });
+    } else {
+      const params = new URLSearchParams(searchParams);
+      params.delete("query");
+      setSearchParams(params);
+    }
   };
 
   return (
