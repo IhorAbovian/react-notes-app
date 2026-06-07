@@ -25,7 +25,7 @@ export const EditPage = () => {
     fetchNote(noteId).then(({ data }) => {
       setSelectedNote(data);
     });
-  }, [noteId, selectedNote]);
+  }, [noteId]);
 
   const handleSubmit = async (event: SubmitEvent) => {
     event.preventDefault();
@@ -74,6 +74,7 @@ export const EditPage = () => {
         </div>
 
         <form
+          key={selectedNote?.id}
           className="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-6"
           onSubmit={handleSubmit}
         >

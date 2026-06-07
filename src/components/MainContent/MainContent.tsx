@@ -24,7 +24,7 @@ const MainContent = () => {
     fetchNote(noteId).then(({ data }) => {
       setSelectedNote(data);
     });
-  }, [noteId, selectedNote]);
+  }, [noteId]);
 
   const handleDelete = async () => {
     const isConfirmed = confirm("Are you sure you want to delete this note?");

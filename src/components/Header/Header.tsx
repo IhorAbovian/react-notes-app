@@ -7,18 +7,13 @@ import { faPlus, faClipboardList } from "@fortawesome/free-solid-svg-icons";
 const Header = () => {
   // const { setQuery } = useFilters();
   const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get("query") || "";
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const query = event.target.value;
-    setSearchParams({ query });
-
-    if (query) {
-      searchParams.set("query", query);
-    } else {
-      searchParams.delete("query");
-    }
-
-    setSearchParams(searchParams);
+  const handleSearch = (event: React.FormEvent) => {
+    event.preventDefault();
+    const formData = new FormData(event.target as HTMLFormElement);
+    const searchQuery = (formData.get("search") as string) || "";
+    setSearchParams({ query: searchQuery });
   };
 
   return (
@@ -34,7 +29,7 @@ const Header = () => {
           NotesApp
         </Link>
 
-        <form className="flex flex-1 max-w-md items-center">
+        <div className="flex flex-1 max-w-md items-center">
           <div className="relative w-full">
             <svg
               className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
@@ -49,14 +44,17 @@ const Header = () => {
                 d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"
               />
             </svg>
-            <input
-              type="search"
-              placeholder="Search notes..."
-              onChange={handleSearch}
-              className="w-full rounded-lg border border-gray-200 bg-gray-50 py-2 pl-9 pr-4 text-sm text-gray-800 placeholder:text-gray-400"
-            />
+            <form onSubmit={handleSearch}>
+              <input
+                name="search"
+                type="search"
+                placeholder="Search notes..."
+                defaultValue={query}
+                className="w-full rounded-lg border border-gray-200 bg-gray-50 py-2 pl-9 pr-4 text-sm text-gray-800 placeholder:text-gray-400"
+              />
+            </form>
           </div>
-        </form>
+        </div>
 
         <Link
           to="/add"

@@ -37,6 +37,10 @@ export const useNotes = create<NotesStore>((set) => {
         notes: state.notes.map((note: Note) =>
           note.id === updatedNote.id ? updatedNote : note,
         ),
+        selectedNote:
+          state.selectedNote?.id === updatedNote.id
+            ? updatedNote
+            : state.selectedNote,
       })),
   };
 });
