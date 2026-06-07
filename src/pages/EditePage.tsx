@@ -1,6 +1,6 @@
-import { useEffect, useState, type SubmitEvent } from "react";
-import { useNavigate, useParams } from "react-router";
-import { fetchNote, updateNote, type Note } from "../api/fetches.ts";
+import { useEffect, type SubmitEvent } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { fetchNote, updateNote } from "../api/fetches.ts";
 import { useNotes } from "../state/notes.ts";
 
 export const EditPage = () => {
@@ -9,7 +9,7 @@ export const EditPage = () => {
 
   const { noteId } = useParams();
 
-  const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+  const { selectedNote, setSelectedNote } = useNotes();
 
   useEffect(() => {
     if (!noteId) {
@@ -18,10 +18,14 @@ export const EditPage = () => {
       return;
     }
 
+    if (selectedNote?.id === noteId) {
+      return;
+    }
+
     fetchNote(noteId).then(({ data }) => {
       setSelectedNote(data);
     });
-  }, [noteId]);
+  }, [noteId, selectedNote]);
 
   const handleSubmit = async (event: SubmitEvent) => {
     event.preventDefault();

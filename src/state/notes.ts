@@ -2,9 +2,9 @@ import { create } from "zustand";
 import type { Note } from "../api/fetches";
 
 type NotesStore = {
-  selectedNoteId: string | null;
-  setSelectedNoteId: (id: string | null) => void;
   notes: Note[];
+  selectedNote: Note | null;
+  setSelectedNote: (note: Note | null) => void;
   isFetched: boolean;
   setNotes: (notes: Note[]) => void;
   removeNote: (id: string) => void;
@@ -21,8 +21,8 @@ export const useNotes = create<NotesStore>((set) => {
   return {
     notes: [],
     isFetched: false,
-    selectedNoteId: null,
-    setSelectedNoteId: (selectedNoteId) => set({ selectedNoteId }), // добавить эту строку
+    selectedNote: null,
+    setSelectedNote: (selectedNote) => set({ selectedNote }),
     setNotes: (notes: Note[]) => set({ notes, isFetched: true }),
     removeNote: (id: string) =>
       set((state) => ({

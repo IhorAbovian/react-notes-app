@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
-import { Link, useParams, useNavigate } from "react-router";
-import { deleteNote, fetchNote, type Note } from "../../api/fetches.ts";
+import { useEffect } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { deleteNote, fetchNote } from "../../api/fetches.ts";
 import { useNotes } from "../../state/notes.ts";
 
 const MainContent = () => {
   const { removeNote } = useNotes();
-  const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+  const { selectedNote, setSelectedNote } = useNotes();
   const navigate = useNavigate();
 
   const { noteId } = useParams();
@@ -17,10 +17,14 @@ const MainContent = () => {
       return;
     }
 
+    if (selectedNote?.id === noteId) {
+      return;
+    }
+
     fetchNote(noteId).then(({ data }) => {
       setSelectedNote(data);
     });
-  }, [noteId]);
+  }, [noteId, selectedNote]);
 
   const handleDelete = async () => {
     const isConfirmed = confirm("Are you sure you want to delete this note?");
