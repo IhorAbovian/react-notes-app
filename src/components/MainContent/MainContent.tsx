@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { deleteNote, fetchNote } from "../../api/fetches.ts";
 import { useNotes } from "../../state/notes.ts";
+import { formatDate } from "../../utils/constants.ts";
 
 const MainContent = () => {
   const { removeNote } = useNotes();
@@ -12,7 +13,6 @@ const MainContent = () => {
 
   useEffect(() => {
     if (!noteId) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedNote(null);
       return;
     }
@@ -24,7 +24,7 @@ const MainContent = () => {
     fetchNote(noteId).then(({ data }) => {
       setSelectedNote(data);
     });
-  }, [noteId]);
+  }, [noteId, selectedNote?.id, setSelectedNote]);
 
   const handleDelete = async () => {
     const isConfirmed = confirm("Are you sure you want to delete this note?");
@@ -68,6 +68,10 @@ const MainContent = () => {
               <span className="text-xs text-gray-400 uppercase tracking-wider font-medium">
                 Note
               </span>
+            </div>
+
+            <div className="flex items-center gap-2 text-xs text-gray-400">
+              {formatDate(selectedNote.createdAt)}
             </div>
 
             <div className="flex items-center gap-2">

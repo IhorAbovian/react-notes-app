@@ -3,12 +3,14 @@ import { BACKEND_URL } from "../utils/constants";
 type CreateNoteData = {
   title: string;
   body: string;
+  createdAt?: string;
 };
 
 export type Note = {
   id: string;
   title: string;
   body: string;
+  createdAt: string;
 };
 
 export const fetchNotes = async (options?: { query?: string }) => {

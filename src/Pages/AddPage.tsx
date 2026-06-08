@@ -27,6 +27,7 @@ export const AddPage = () => {
     const createNoteData = {
       title,
       body,
+      createdAt: new Date().toISOString(),
     };
 
     createNote(createNoteData).then(({ data, error }) => {
