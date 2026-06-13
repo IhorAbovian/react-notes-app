@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { fetchNotes } from "../../api/fetches";
 import { useNotes } from "../../state/notes";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router";
 import { Badge } from "../ui/badge.tsx";
 import { Separator } from "../ui/separator.tsx";
 
