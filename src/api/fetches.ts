@@ -4,6 +4,7 @@ type CreateNoteData = {
   title: string;
   body: string;
   createdAt?: string;
+  tags?: string[];
 };
 
 export type Note = {
@@ -11,6 +12,7 @@ export type Note = {
   title: string;
   body: string;
   createdAt: string;
+  tags?: string[];
 };
 
 export const fetchNotes = async (options?: { query?: string }) => {

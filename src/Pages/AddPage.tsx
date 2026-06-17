@@ -1,11 +1,30 @@
-import type { SubmitEvent } from "react";
+import { useState, type SubmitEvent } from "react";
 import { useNavigate } from "react-router";
 import { createNote } from "../api/fetches.ts";
 import { useNotes } from "../state/notes.ts";
+import { Button } from "../components/ui/button.tsx";
+import { Input } from "../components/ui/input.tsx";
+import { Textarea } from "../components/ui/textarea.tsx";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "../components/ui/card.tsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCancel, faNewspaper } from "@fortawesome/free-solid-svg-icons";
+import { Label } from "../components/ui/label.tsx";
+import { toast } from "sonner";
+import CreatableSelect from "react-select/creatable";
 
 export const AddPage = () => {
   const navigate = useNavigate();
-  const { addNote } = useNotes();
+  const { addNote, setSelectedNote } = useNotes();
+  const [selectedTag, setSelectedTag] = useState<
+    { value: string; label: string }[]
+  >([]);
 
   const handleSubmit = async (event: SubmitEvent) => {
     event.preventDefault();
@@ -17,6 +36,7 @@ export const AddPage = () => {
 
     const title = titleInput?.value || "";
     const body = bodyTextArea?.value || "";
+    const tags = selectedTag.map((tag) => tag.value);
 
     if (!title || !body) {
       console.log("Title and body must be not empty");
@@ -27,84 +47,90 @@ export const AddPage = () => {
     const createNoteData = {
       title,
       body,
+      tags: tags.length > 0 ? tags : undefined,
       createdAt: new Date().toISOString(),
     };
 
     createNote(createNoteData).then(({ data, error }) => {
       if (data) {
         addNote(data);
+        setSelectedNote(data);
         navigate(`/${data.id}`);
       }
 
       if (error) {
-        alert("Failed to create a note!");
+        toast.error("Failed to create a note!", { position: "top-center" });
       }
     });
   };
 
   return (
     <div className="flex min-h-[calc(100vh-57px)] items-start justify-center bg-gray-50 p-8">
-      <div className="w-full max-w-2xl">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">New Note</h1>
-          <p className="mt-1 text-sm text-gray-500">Create a new note</p>
-        </div>
+      <div className="container mx-auto w-full max-w-2xl">
+        <form onSubmit={handleSubmit}>
+          <Card>
+            <CardHeader>
+              <CardTitle>New Note</CardTitle>
+              <CardDescription>Create a new note</CardDescription>
+            </CardHeader>
 
-        <form
-          className="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-6"
-          onSubmit={handleSubmit}
-        >
-          <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-gray-700">Title</label>
-            <input
-              type="text"
-              name="title"
-              className="rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder:text-gray-400"
-              placeholder="Note title..."
-              required
-            />
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-gray-700">Body</label>
-            <textarea
-              name="body"
-              rows={8}
-              className="rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder:text-gray-400 resize-none"
-              placeholder="Write your note here..."
-              required
-            />
-          </div>
-
-          <div className="flex gap-3 pt-2">
-            <button
-              type="submit"
-              className="flex items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-700"
-            >
-              <svg
-                className="h-4 w-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M5 13l4 4L19 7"
+            <CardContent className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="title">Title</Label>
+                <Input
+                  id="title"
+                  type="text"
+                  name="title"
+                  placeholder="Note title..."
+                  required
                 />
-              </svg>
-              Save Note
-            </button>
+              </div>
 
-            <button
-              type="button"
-              className="rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50"
-              onClick={() => navigate("/")}
-            >
-              Cancel
-            </button>
-          </div>
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="body">Body</Label>
+                <Textarea
+                  id="body"
+                  name="body"
+                  placeholder="Write your note here..."
+                  required
+                  className="max-h-75"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="tags">Tags</Label>
+                <CreatableSelect
+                  isMulti
+                  id="tags"
+                  value={selectedTag}
+                  onChange={(newValue) =>
+                    setSelectedTag(
+                      newValue as { value: string; label: string }[],
+                    )
+                  }
+                  name="title"
+                  placeholder="Add tags..."
+                  required
+                />
+              </div>
+            </CardContent>
+
+            <CardFooter className="flex gap-3">
+              <Button type="submit" className="cursor-pointer">
+                <FontAwesomeIcon icon={faNewspaper} />
+                Create Note
+              </Button>
+
+              <Button
+                type="button"
+                className="cursor-pointer"
+                onClick={() => navigate("/")}
+              >
+                <FontAwesomeIcon icon={faCancel} />
+                Cancel
+              </Button>
+            </CardFooter>
+          </Card>
         </form>
       </div>
     </div>
