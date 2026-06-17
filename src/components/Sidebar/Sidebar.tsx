@@ -32,7 +32,7 @@ const Sidebar = () => {
 
   return (
     <aside className="flex h-[calc(100vh-57px)] w-72 shrink-0 flex-col border-r border-gray-200 bg-gray-50">
-      <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3">
+      <div className="container mx-auto flex items-center justify-between border-b border-gray-200 px-4 py-3">
         <h2 className="text-sm font-semibold text-gray-500">My Notes</h2>
         <Badge>{notes.length}</Badge>
       </div>

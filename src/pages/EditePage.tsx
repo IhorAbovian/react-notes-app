@@ -1,4 +1,4 @@
-import { useEffect, type SubmitEvent } from "react";
+import { useEffect, type SubmitEvent, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { fetchNote, updateNote } from "../api/fetches.ts";
 import { useNotes } from "../state/notes.ts";
@@ -14,8 +14,9 @@ import {
   CardFooter,
 } from "../components/ui/card.tsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCancel, faSave } from "@fortawesome/free-solid-svg-icons";
+import { faCancel, faSave, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { Label } from "../components/ui/label.tsx";
+import { toast } from "sonner";
 
 export const EditPage = () => {
   const navigate = useNavigate();
@@ -24,6 +25,8 @@ export const EditPage = () => {
   const { noteId } = useParams();
 
   const { selectedNote, setSelectedNote } = useNotes();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (!noteId) {
@@ -66,71 +69,86 @@ export const EditPage = () => {
       body,
     };
 
-    updateNote(noteId, updateNoteData).then(({ data, error }) => {
-      if (data) {
-        editNote(data);
-        navigate(`/${noteId}`);
-      }
+    setIsLoading(true);
 
-      if (error) {
-        alert("Failed to update the note!");
-      }
-    });
+    updateNote(noteId, updateNoteData)
+      .then(({ data, error }) => {
+        if (data) {
+          editNote(data);
+          navigate(`/${noteId}`);
+        }
+
+        if (error) {
+          toast.error("Failed to update the note!", { position: "top-center" });
+        }
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (
     <div className="flex min-h-[calc(100vh-57px)] items-start justify-center bg-gray-50 p-8">
-      <form
-        key={selectedNote?.id}
-        className="w-full max-w-2xl"
-        onSubmit={handleSubmit}
-      >
-        <Card>
-          <CardHeader>
-            <CardTitle>Edit Note</CardTitle>
-            <CardDescription>Update your note content</CardDescription>
-          </CardHeader>
+      <div className="container mx-auto w-full max-w-2xl">
+        <form key={selectedNote?.id} onSubmit={handleSubmit}>
+          <Card>
+            <CardHeader>
+              <CardTitle>Edit Note</CardTitle>
+              <CardDescription>Update your note content</CardDescription>
+            </CardHeader>
 
-          <CardContent className="flex flex-col gap-4">
-            <div className="flex flex-col gap-1.5">
-              <Label>Title</Label>
-              <Input
-                type="text"
-                name="title"
-                placeholder="Note title..."
-                required
-                defaultValue={selectedNote?.title}
-              />
-            </div>
+            <CardContent className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="title">Title</Label>
+                <Input
+                  id="title"
+                  type="text"
+                  name="title"
+                  placeholder="Note title..."
+                  required
+                  defaultValue={selectedNote?.title}
+                />
+              </div>
 
-            <div className="flex flex-col gap-1.5">
-              <Label>Body</Label>
-              <Textarea
-                name="body"
-                placeholder="Write your note here..."
-                required
-                defaultValue={selectedNote?.body}
-              />
-            </div>
-          </CardContent>
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="body">Body</Label>
+                <Textarea
+                  id="body"
+                  name="body"
+                  placeholder="Write your note here..."
+                  required
+                  defaultValue={selectedNote?.body}
+                  className="max-h-75"
+                />
+              </div>
+            </CardContent>
 
-          <CardFooter className="flex gap-3">
-            <Button type="submit" className="cursor-pointer">
-              <FontAwesomeIcon icon={faSave} />
-              Save Changes
-            </Button>
+            <CardFooter className="flex gap-3">
+              <Button
+                type="submit"
+                className="cursor-pointer"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <FontAwesomeIcon icon={faSpinner} spin />
+                ) : (
+                  <FontAwesomeIcon icon={faSave} />
+                )}
+                Save Changes
+              </Button>
 
-            <Button
-              type="button"
-              className="cursor-pointer"
-              onClick={() => navigate("/")}
-            >
-              <FontAwesomeIcon icon={faCancel} />
-              Cancel
-            </Button>
-          </CardFooter>
-        </Card>
-      </form>
+              <Button
+                type="button"
+                className="cursor-pointer"
+                onClick={() => navigate("/")}
+              >
+                <FontAwesomeIcon icon={faCancel} />
+                Cancel
+              </Button>
+            </CardFooter>
+          </Card>
+        </form>
+      </div>
     </div>
   );
 };

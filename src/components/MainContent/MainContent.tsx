@@ -8,6 +8,7 @@ import { Card, CardHeader, CardDescription, CardContent } from "../ui/card.tsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Separator } from "../ui/separator.tsx";
+import { Modal } from "../Modal/Modal.tsx";
 
 const MainContent = () => {
   const { removeNote } = useNotes();
@@ -32,9 +33,7 @@ const MainContent = () => {
   }, [noteId, selectedNote?.id, setSelectedNote]);
 
   const handleDelete = async () => {
-    const isConfirmed = confirm("Are you sure you want to delete this note?");
-
-    if (!isConfirmed || !selectedNote) return;
+    if (!selectedNote) return;
 
     const { error } = await deleteNote(selectedNote.id);
 
@@ -65,7 +64,7 @@ const MainContent = () => {
       )}
 
       {selectedNote && (
-        <div className="flex flex-col gap-6 p-8 max-w-3xl w-full">
+        <div className="container mx-auto flex flex-col gap-6 p-8 max-w-3xl w-full">
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
@@ -88,10 +87,18 @@ const MainContent = () => {
                     </Button>
                   </Link>
 
-                  <Button onClick={handleDelete} className="cursor-pointer">
-                    <FontAwesomeIcon icon={faTrash} />
-                    Delete
-                  </Button>
+                  <Modal
+                    trigger={
+                      <Button className="cursor-pointer">
+                        <FontAwesomeIcon icon={faTrash} />
+                        Delete
+                      </Button>
+                    }
+                    title="Confirm deletion"
+                    description="Are you sure you want to delete this note?"
+                    onAction={handleDelete}
+                    actionLabel="Yes"
+                  ></Modal>
                 </div>
               </div>
             </CardHeader>

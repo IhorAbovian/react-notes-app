@@ -26,8 +26,8 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 z-10 border-b border-gray-200 bg-white px-6 py-3">
-      <div className="mx-auto flex max-w-screen-xl items-center justify-between gap-6">
+    <header className="sticky top-0 z-10 border-b border-gray-200 bg-white">
+      <div className="container mx-auto flex items-center justify-between gap-6 px-6 py-3">
         <Link
           to="/"
           className="flex items-center gap-2 text-xl font-bold tracking-tight text-gray-900"
