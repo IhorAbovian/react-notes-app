@@ -4,7 +4,7 @@ type CreateNoteData = {
   title: string;
   body: string;
   createdAt?: string;
-  tags?: string[];
+  tags?: string;
 };
 
 export type Note = {
@@ -12,7 +12,7 @@ export type Note = {
   title: string;
   body: string;
   createdAt: string;
-  tags?: string[];
+  tags?: string;
 };
 
 export const fetchNotes = async (options?: { query?: string }) => {
@@ -100,10 +100,7 @@ export const createNote = async (createNoteData: CreateNoteData) => {
   }
 };
 
-export const updateNote = async (
-  id: string,
-  updateNoteData: CreateNoteData,
-) => {
+export const updateNote = async (id: string, updateNoteData: CreateNoteData) => {
   try {
     const updatedNoteResponse = await fetch(`${BACKEND_URL}/notes/${id}`, {
       method: "PATCH",

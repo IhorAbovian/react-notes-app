@@ -5,14 +5,7 @@ import { useNotes } from "../state/notes.ts";
 import { Button } from "../components/ui/button.tsx";
 import { Input } from "../components/ui/input.tsx";
 import { Textarea } from "../components/ui/textarea.tsx";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "../components/ui/card.tsx";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "../components/ui/card.tsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCancel, faNewspaper } from "@fortawesome/free-solid-svg-icons";
 import { Label } from "../components/ui/label.tsx";
@@ -22,9 +15,7 @@ import CreatableSelect from "react-select/creatable";
 export const AddPage = () => {
   const navigate = useNavigate();
   const { addNote, setSelectedNote } = useNotes();
-  const [selectedTag, setSelectedTag] = useState<
-    { value: string; label: string }[]
-  >([]);
+  const [selectedTag, setSelectedTag] = useState<{ value: string; label: string }[]>([]);
 
   const handleSubmit = async (event: SubmitEvent) => {
     event.preventDefault();
@@ -36,7 +27,7 @@ export const AddPage = () => {
 
     const title = titleInput?.value || "";
     const body = bodyTextArea?.value || "";
-    const tags = selectedTag.map((tag) => tag.value);
+    const tags = selectedTag.map((input) => input.value);
 
     if (!title || !body) {
       console.log("Title and body must be not empty");
@@ -47,7 +38,7 @@ export const AddPage = () => {
     const createNoteData = {
       title,
       body,
-      tags: tags.length > 0 ? tags : undefined,
+      tags: tags.join(","),
       createdAt: new Date().toISOString(),
     };
 
@@ -77,24 +68,12 @@ export const AddPage = () => {
             <CardContent className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="title">Title</Label>
-                <Input
-                  id="title"
-                  type="text"
-                  name="title"
-                  placeholder="Note title..."
-                  required
-                />
+                <Input id="title" type="text" name="title" placeholder="Note title..." required />
               </div>
 
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="body">Body</Label>
-                <Textarea
-                  id="body"
-                  name="body"
-                  placeholder="Write your note here..."
-                  required
-                  className="max-h-75"
-                />
+                <Textarea id="body" name="body" placeholder="Write your note here..." required className="max-h-75" />
               </div>
 
               <div className="flex flex-col gap-1.5">
@@ -102,15 +81,10 @@ export const AddPage = () => {
                 <CreatableSelect
                   isMulti
                   id="tags"
+                  name="tags"
                   value={selectedTag}
-                  onChange={(newValue) =>
-                    setSelectedTag(
-                      newValue as { value: string; label: string }[],
-                    )
-                  }
-                  name="title"
+                  onChange={(newValue) => setSelectedTag(newValue as { value: string; label: string }[])}
                   placeholder="Add tags..."
-                  required
                 />
               </div>
             </CardContent>
@@ -121,11 +95,7 @@ export const AddPage = () => {
                 Create Note
               </Button>
 
-              <Button
-                type="button"
-                className="cursor-pointer"
-                onClick={() => navigate("/")}
-              >
+              <Button type="button" className="cursor-pointer" onClick={() => navigate("/")}>
                 <FontAwesomeIcon icon={faCancel} />
                 Cancel
               </Button>
