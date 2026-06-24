@@ -1,22 +1,16 @@
 import { useEffect, type SubmitEvent, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { fetchNote, updateNote } from "../api/fetches.ts";
+import { fetchNote, updateNote } from "../api/notes.ts";
 import { useNotes } from "../state/notes.ts";
 import { Button } from "../components/ui/button.tsx";
 import { Input } from "../components/ui/input.tsx";
 import { Textarea } from "../components/ui/textarea.tsx";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "../components/ui/card.tsx";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "../components/ui/card.tsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCancel, faSave, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { Label } from "../components/ui/label.tsx";
 import { toast } from "sonner";
+import { TagSelect } from "../components/ui/tag-select.tsx";
 
 export const EditPage = () => {
   const navigate = useNavigate();
@@ -54,9 +48,11 @@ export const EditPage = () => {
 
     const titleInput = form.title as unknown as HTMLInputElement | null;
     const bodyTextArea = form.body as unknown as HTMLTextAreaElement | null;
+    const tagInputs = form.tags?.length > 1 ? [...form.tags] : [form.tags];
 
     const title = titleInput?.value || "";
     const body = bodyTextArea?.value || "";
+    const tags = tagInputs.map((input) => input?.value);
 
     if (!title || !body) {
       console.log("Title and body must be not empty");
@@ -67,6 +63,8 @@ export const EditPage = () => {
     const updateNoteData = {
       title,
       body,
+      tags: tags.join(),
+      updatedAt: new Date().toISOString(),
     };
 
     setIsLoading(true);
@@ -86,6 +84,8 @@ export const EditPage = () => {
         setIsLoading(false);
       });
   };
+
+  const tagOptions = selectedNote?.tags ? selectedNote.tags.split(",").map((tag) => ({ value: tag, label: tag })) : [];
 
   return (
     <div className="flex min-h-[calc(100vh-57px)] items-start justify-center bg-gray-50 p-8">
@@ -121,27 +121,21 @@ export const EditPage = () => {
                   className="max-h-75"
                 />
               </div>
+
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="tags">Tags</Label>
+
+                <TagSelect isMulti inputId="tags" name="tags" placeholder="Add tags..." />
+              </div>
             </CardContent>
 
             <CardFooter className="flex gap-3">
-              <Button
-                type="submit"
-                className="cursor-pointer"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <FontAwesomeIcon icon={faSpinner} spin />
-                ) : (
-                  <FontAwesomeIcon icon={faSave} />
-                )}
+              <Button type="submit" className="cursor-pointer" disabled={isLoading}>
+                {isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : <FontAwesomeIcon icon={faSave} />}
                 Save Changes
               </Button>
 
-              <Button
-                type="button"
-                className="cursor-pointer"
-                onClick={() => navigate("/")}
-              >
+              <Button type="button" className="cursor-pointer" onClick={() => navigate("/")}>
                 <FontAwesomeIcon icon={faCancel} />
                 Cancel
               </Button>

@@ -1,0 +1,25 @@
+{
+  "notes": [
+    {
+      "title": "asdasd",
+      "body": "asdasd",
+      "tags": "asd",
+      "createdAt": "2026-06-17T22:51:24.067Z",
+      "id": "tXSetVp36wM"
+    },
+    {
+      "title": "sdfsdf",
+      "body": "sdf",
+      "tags": ",asd,as,asda,saddas,asdasd",
+      "createdAt": "2026-06-17T22:57:19.460Z",
+      "id": "T9OMzL7bDfM"
+    }
+  ],
+  "tags": [
+    {
+      "id": "sdfsdfdsf",
+      "name": "example"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

@@ -1,30 +1,25 @@
-import { useState, type SubmitEvent } from "react";
+import { type SubmitEvent, useState } from "react";
 import { useNavigate } from "react-router";
-import { createNote } from "../api/fetches.ts";
+import { createNote } from "../api/notes.ts";
 import { useNotes } from "../state/notes.ts";
 import { Button } from "../components/ui/button.tsx";
 import { Input } from "../components/ui/input.tsx";
 import { Textarea } from "../components/ui/textarea.tsx";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "../components/ui/card.tsx";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "../components/ui/card.tsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCancel, faNewspaper } from "@fortawesome/free-solid-svg-icons";
+import { faCancel, faNewspaper, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { Label } from "../components/ui/label.tsx";
 import { toast } from "sonner";
-import CreatableSelect from "react-select/creatable";
+import { TagSelect } from "../components/ui/tag-select.tsx";
 
 export const AddPage = () => {
   const navigate = useNavigate();
   const { addNote, setSelectedNote } = useNotes();
-  const [selectedTag, setSelectedTag] = useState<
-    { value: string; label: string }[]
-  >([]);
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  // fetch all tags
+  // then make options for react-select from them (e.g. { value: tagName, label: tagName })
 
   const handleSubmit = async (event: SubmitEvent) => {
     event.preventDefault();
@@ -33,10 +28,11 @@ export const AddPage = () => {
 
     const titleInput = form.title as unknown as HTMLInputElement | null;
     const bodyTextArea = form.body as unknown as HTMLTextAreaElement | null;
+    const tagInputs = form.tags?.length > 1 ? [...form.tags] : [form.tags];
 
     const title = titleInput?.value || "";
     const body = bodyTextArea?.value || "";
-    const tags = selectedTag.map((tag) => tag.value);
+    const tags = tagInputs.map((input) => input?.value);
 
     if (!title || !body) {
       console.log("Title and body must be not empty");
@@ -47,21 +43,29 @@ export const AddPage = () => {
     const createNoteData = {
       title,
       body,
-      tags: tags.length > 0 ? tags : undefined,
+      tags: tags.join(),
       createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     };
 
-    createNote(createNoteData).then(({ data, error }) => {
-      if (data) {
-        addNote(data);
-        setSelectedNote(data);
-        navigate(`/${data.id}`);
-      }
+    setIsLoading(true);
 
-      if (error) {
-        toast.error("Failed to create a note!", { position: "top-center" });
-      }
-    });
+    // create only(*) missing tags (not saved previously)
+    // wait
+
+    createNote(createNoteData)
+      .then(({ data, error }) => {
+        if (data) {
+          addNote(data);
+          setSelectedNote(data);
+          navigate(`/${data.id}`);
+        }
+
+        if (error) {
+          toast.error("Failed to create a note!", { position: "top-center" });
+        }
+      })
+      .finally(() => setIsLoading(false));
   };
 
   return (
@@ -77,55 +81,29 @@ export const AddPage = () => {
             <CardContent className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="title">Title</Label>
-                <Input
-                  id="title"
-                  type="text"
-                  name="title"
-                  placeholder="Note title..."
-                  required
-                />
+                <Input id="title" type="text" name="title" placeholder="Note title..." required />
               </div>
 
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="body">Body</Label>
-                <Textarea
-                  id="body"
-                  name="body"
-                  placeholder="Write your note here..."
-                  required
-                  className="max-h-75"
-                />
+                <Textarea id="body" name="body" placeholder="Write your note here..." required className="max-h-75" />
               </div>
 
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="tags">Tags</Label>
-                <CreatableSelect
-                  isMulti
-                  id="tags"
-                  value={selectedTag}
-                  onChange={(newValue) =>
-                    setSelectedTag(
-                      newValue as { value: string; label: string }[],
-                    )
-                  }
-                  name="title"
-                  placeholder="Add tags..."
-                  required
-                />
+                {/*add options from all fetched tags*/}
+                <TagSelect isMulti inputId="tags" name="tags" placeholder="Add tags..." />
               </div>
             </CardContent>
 
             <CardFooter className="flex gap-3">
-              <Button type="submit" className="cursor-pointer">
-                <FontAwesomeIcon icon={faNewspaper} />
+              <Button type="submit" className="cursor-pointer" disabled={isLoading}>
+                {" "}
+                {isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : <FontAwesomeIcon icon={faNewspaper} />}
                 Create Note
               </Button>
 
-              <Button
-                type="button"
-                className="cursor-pointer"
-                onClick={() => navigate("/")}
-              >
+              <Button type="button" className="cursor-pointer" onClick={() => navigate("/")}>
                 <FontAwesomeIcon icon={faCancel} />
                 Cancel
               </Button>

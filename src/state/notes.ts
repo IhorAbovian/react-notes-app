@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { Note } from "../api/fetches";
+import type { Note } from "../api/notes";
 
 type NotesStore = {
   notes: Note[];
@@ -34,13 +34,8 @@ export const useNotes = create<NotesStore>((set) => {
       })),
     editNote: (updatedNote: Note) =>
       set((state) => ({
-        notes: state.notes.map((note: Note) =>
-          note.id === updatedNote.id ? updatedNote : note,
-        ),
-        selectedNote:
-          state.selectedNote?.id === updatedNote.id
-            ? updatedNote
-            : state.selectedNote,
+        notes: state.notes.map((note: Note) => (note.id === updatedNote.id ? updatedNote : note)),
+        selectedNote: state.selectedNote?.id === updatedNote.id ? updatedNote : state.selectedNote,
       })),
   };
 });
