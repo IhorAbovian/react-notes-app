@@ -1,6 +1,7 @@
 {
   "notes": [
     {
+
       "title": "asdasd",
       "body": "asdasd",
       "tags": "asd",
@@ -19,6 +20,25 @@
     {
       "id": "sdfsdfdsf",
       "name": "example"
+
+      "title": "32f",
+      "body": "fff",
+      "createdAt": "2026-06-21T01:48:49.869Z",
+      "id": "jNo-zq9YvhQ"
+    },
+    {
+      "title": "fdssad",
+      "body": "sad23",
+      "createdAt": "2026-06-21T01:49:02.020Z",
+      "id": "YNIBT9lvtq0"
+    },
+    {
+      "title": "22",
+      "body": "22",
+      "tags": "22",
+      "createdAt": "2026-06-21T02:04:47.429Z",
+      "id": "-5rPe8-eR6Q"
+
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

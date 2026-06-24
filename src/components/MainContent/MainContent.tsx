@@ -85,17 +85,25 @@ const MainContent = () => {
     <main className="flex flex-1 flex-col bg-white min-h-[calc(100vh-57px)]">
       {!noteId && (
         <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
-          <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gray-100 text-4xl">📝</div>
+          <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gray-100 text-4xl">
+            📝
+          </div>
           <div>
             <p className="text-lg font-medium text-gray-700">Select a note</p>
-            <p className="mt-1 text-sm text-gray-400">Choose a note from the sidebar or create a new one</p>
+            <p className="mt-1 text-sm text-gray-400">
+              Choose a note from the sidebar or create a new one
+            </p>
           </div>
         </div>
       )}
 
       {isLoading && !selectedNote && (
         <div className="flex flex-1 flex-col items-center justify-center py-8">
-          <FontAwesomeIcon icon={faSpinner} spin className="h-8 w-8 text-gray-500 mb-2" />
+          <FontAwesomeIcon
+            icon={faSpinner}
+            spin
+            className="h-8 w-8 text-gray-500 mb-2"
+          />
           <p className="text-sm text-gray-500">Loading note…</p>
         </div>
       )}
@@ -107,12 +115,14 @@ const MainContent = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="h-2 w-2 rounded-full bg-indigo-400" />
-                  <span className="text-xs text-gray-400 uppercase tracking-wider font-medium">Note</span>
+                  <span className="text-xs text-gray-400 uppercase tracking-wider font-medium">
+                    Note
+                  </span>
                 </div>
 
                 <CardDescription>
-                  {" "}
-                  {selectedNote.updatedAt && selectedNote.updatedAt !== selectedNote.createdAt
+                  {selectedNote.updatedAt &&
+                  selectedNote.updatedAt !== selectedNote.createdAt
                     ? `updated ${formatDate(selectedNote.updatedAt)}`
                     : `created ${formatDate(selectedNote.createdAt)}`}
                 </CardDescription>
@@ -129,7 +139,11 @@ const MainContent = () => {
                     trigger={
                       <Button className="cursor-pointer" disabled={deleting}>
                         {deleting ? (
-                          <FontAwesomeIcon icon={faSpinner} spin className="mr-2" />
+                          <FontAwesomeIcon
+                            icon={faSpinner}
+                            spin
+                            className="mr-2"
+                          />
                         ) : (
                           <FontAwesomeIcon icon={faTrash} />
                         )}
@@ -158,9 +172,13 @@ const MainContent = () => {
                     </Badge>
                   ))}
               </div>
-              <h2 className="text-3xl font-bold text-gray-900 leading-tight">{selectedNote.title}</h2>
+              <h2 className="text-3xl font-bold text-gray-900 leading-tight">
+                {selectedNote.title}
+              </h2>
 
-              <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">{selectedNote.body}</p>
+              <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                {selectedNote.body}
+              </p>
             </CardContent>
           </Card>
         </div>

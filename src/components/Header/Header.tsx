@@ -42,6 +42,8 @@ const Header = () => {
           <div className="relative w-full">
             <form onSubmit={handleSearch}>
               <Input name="search" type="search" placeholder="Search notes..." defaultValue={searchValue}></Input>
+
+              <Input name="search" type="search" placeholder="Search notes..." defaultValue={query}></Input>
             </form>
           </div>
         </div>
