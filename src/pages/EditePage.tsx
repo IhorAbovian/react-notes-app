@@ -19,6 +19,11 @@ import { Label } from "../components/ui/label.tsx";
 import { toast } from "sonner";
 import { TagSelect } from "../components/ui/tag-select.tsx";
 
+interface TagOption {
+  value: string;
+  label: string;
+}
+
 export const EditPage = () => {
   const navigate = useNavigate();
   const { editNote } = useNotes();
@@ -28,6 +33,8 @@ export const EditPage = () => {
   const { selectedNote, setSelectedNote } = useNotes();
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const [updatedTags, setUpdatedTags] = useState<TagOption[] | null>(null);
 
   useEffect(() => {
     if (!noteId) {
@@ -64,10 +71,21 @@ export const EditPage = () => {
       return;
     }
 
+    let finalTags = selectedNote?.tags || [];
+
+    if (updatedTags !== null) {
+      finalTags = updatedTags.map((tag) => tag.value).join(", ");
+    } else if (selectedNote?.tags) {
+      finalTags = Array.isArray(selectedNote.tags)
+        ? selectedNote.tags.join(", ")
+        : selectedNote.tags;
+    }
+
     const updateNoteData = {
       title,
       body,
       updatedAt: new Date().toISOString(),
+      tags: finalTags,
     };
 
     setIsLoading(true);
@@ -130,6 +148,20 @@ export const EditPage = () => {
                   inputId="tags"
                   name="tags"
                   placeholder="Add tags..."
+                  onChange={(newTags: TagOption[] | null) =>
+                    setUpdatedTags(newTags)
+                  }
+                  defaultValue={
+                    selectedNote?.tags
+                      ? typeof selectedNote.tags === "string"
+                        ? // @ts-ignore
+                          selectedNote.tags
+                            .split(",")
+                            .map((t) => ({ value: t.trim(), label: t.trim() }))
+                        : // @ts-ignore
+                          selectedNote.tags.map((t) => ({ value: t, label: t }))
+                      : []
+                  }
                 />
               </div>
             </CardContent>
