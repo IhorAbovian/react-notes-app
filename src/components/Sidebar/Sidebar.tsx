@@ -16,12 +16,10 @@ const Sidebar = () => {
 
   useEffect(() => {
     const query = searchParams.get("query") || "";
-    const tags = searchParams.get("tags") || "";
 
     (async () => {
       const { data } = await fetchNotes({
         query,
-        tags: tags || undefined,
       });
 
       setNotes(data);

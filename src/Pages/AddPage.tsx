@@ -1,4 +1,4 @@
-import { type SubmitEvent, useState } from "react";
+import { type SubmitEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { createNote } from "../api/notes.ts";
 import { useNotes } from "../state/notes.ts";
@@ -22,15 +22,29 @@ import {
 import { Label } from "../components/ui/label.tsx";
 import { toast } from "sonner";
 import CreatableSelect from "react-select/creatable";
+import { createTag, fetchTags, type Tag } from "@/api/tags.ts";
 
 export const AddPage = () => {
   const navigate = useNavigate();
   const { addNote, setSelectedNote } = useNotes();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [savedTags, setSavedTags] = useState<Tag[]>([]);
 
   // fetch all tags
+  useEffect(() => {
+    (async () => {
+      const { data } = await fetchTags();
+
+      setSavedTags(data);
+    })();
+  }, []);
+
   // then make options for react-select from them (e.g. { value: tagName, label: tagName })
+  const tagOptions = savedTags.map((tag) => ({
+    value: tag.name,
+    label: tag.name,
+  }));
 
   const [selectedTag, setSelectedTag] = useState<
     { value: string; label: string }[]
@@ -54,6 +68,16 @@ export const AddPage = () => {
       return;
     }
 
+    const savedTagsString = savedTags.map((tag) => tag.name).join();
+
+    const unsavedTags = tags.filter((tag) => {
+      const isSaved = savedTagsString.includes(tag);
+
+      return !isSaved;
+    });
+
+    console.log({ tags, savedTags, unsavedTags, savedTagsString });
+
     const createNoteData = {
       title,
       body,
@@ -63,6 +87,10 @@ export const AddPage = () => {
     };
 
     setIsLoading(true);
+
+    const savingTagsPromises = unsavedTags.map((tag) => createTag(tag));
+
+    await Promise.all(savingTagsPromises);
 
     createNote(createNoteData)
       .then(({ data, error }) => {
@@ -83,7 +111,7 @@ export const AddPage = () => {
     <div className="flex min-h-[calc(100vh-57px)] items-start justify-center bg-gray-50 p-8">
       <div className="container mx-auto w-full max-w-2xl">
         <form onSubmit={handleSubmit}>
-          <Card>
+          <Card className="overflow-visible">
             <CardHeader>
               <CardTitle>New Note</CardTitle>
               <CardDescription>Create a new note</CardDescription>
@@ -120,6 +148,7 @@ export const AddPage = () => {
                   id="tags"
                   name="tags"
                   value={selectedTag}
+                  options={tagOptions}
                   onChange={(newValue) =>
                     setSelectedTag(
                       newValue as { value: string; label: string }[],

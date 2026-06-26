@@ -11,7 +11,7 @@ const Header = () => {
   // const { setQuery } = useFilters();
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchValue, setSearchValue] = useState(
-    searchParams.get("tags") ?? "",
+    searchParams.get("query") ?? "",
   );
 
   const handleSearch = (event: React.FormEvent) => {
@@ -25,9 +25,9 @@ const Header = () => {
 
     const params = new URLSearchParams(searchParams);
     if (searchQuery) {
-      params.set("tags", searchQuery);
+      params.set("query", searchQuery);
     } else {
-      params.delete("tags");
+      params.delete("query");
     }
     setSearchParams(params);
   };

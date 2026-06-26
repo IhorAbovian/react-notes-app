@@ -17,14 +17,20 @@ export type Note = {
   updatedAt?: string;
 };
 
-export const fetchNotes = async (options?: { query?: string; tags?: string }) => {
-  const { query = "", tags = "" } = options || {};
+export const fetchNotes = async (options?: { query?: string }) => {
+  const { query = "" } = options || {};
+
   try {
     let url = `${BACKEND_URL}/notes`;
     const params = new URLSearchParams();
 
-    if (query) params.set("title:contains", query);
-    if (tags) params.set("tags:contains", tags);
+    if (query) {
+      const where = {
+        or: [{ title: { contains: query } }, { tags: { contains: query } }],
+      };
+
+      params.set("_where", JSON.stringify(where));
+    }
 
     if (params.toString()) url += `?${params.toString()}`;
 
@@ -104,7 +110,10 @@ export const createNote = async (createNoteData: CreateNoteData) => {
   }
 };
 
-export const updateNote = async (id: string, updateNoteData: CreateNoteData) => {
+export const updateNote = async (
+  id: string,
+  updateNoteData: CreateNoteData,
+) => {
   try {
     const updatedNoteResponse = await fetch(`${BACKEND_URL}/notes/${id}`, {
       method: "PATCH",
