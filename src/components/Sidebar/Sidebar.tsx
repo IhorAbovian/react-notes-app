@@ -1,9 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { fetchNotes } from "../../api/notes.ts";
 import { useNotes } from "../../state/notes";
 import { useNavigate, useParams, useSearchParams } from "react-router";
 import { Badge } from "../ui/badge.tsx";
 import { Separator } from "../ui/separator.tsx";
+import { Button } from "../ui/button.tsx";
+
+const LIMIT = 20;
 
 const Sidebar = () => {
   // const { query } = useFilters();
@@ -14,17 +17,21 @@ const Sidebar = () => {
 
   const { notes, setNotes } = useNotes();
 
+  const [page, setPage] = useState(1);
+
   useEffect(() => {
     const query = searchParams.get("query") || "";
 
     (async () => {
       const { data } = await fetchNotes({
         query,
+        _page: page,
+        _limit: LIMIT,
       });
 
-      setNotes(data);
+      setNotes((prev) => [...prev, ...data]);
     })();
-  }, [searchParams]);
+  }, [searchParams, page, setNotes]);
 
   const handleNoteClick = (id: string) => {
     const params = new URLSearchParams(searchParams);
@@ -70,6 +77,11 @@ const Sidebar = () => {
             <Separator className="my-1" />
           </div>
         ))}
+      </div>
+      <div className="pt-2">
+        <Button className="w-full" onClick={() => setPage((p) => p + 1)}>
+          Load More
+        </Button>
       </div>
     </aside>
   );

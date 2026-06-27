@@ -71,7 +71,7 @@ export const EditPage = () => {
       return;
     }
 
-    let finalTags = selectedNote?.tags || [];
+    let finalTags = selectedNote?.tags ?? "";
 
     if (updatedTags !== null) {
       finalTags = updatedTags.map((tag) => tag.value).join(", ");

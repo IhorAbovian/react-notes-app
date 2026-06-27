@@ -6,7 +6,7 @@ type NotesStore = {
   selectedNote: Note | null;
   setSelectedNote: (note: Note | null) => void;
   isFetched: boolean;
-  setNotes: (notes: Note[]) => void;
+  setNotes: (notes: Note[] | ((prev: Note[]) => Note[])) => void;
   removeNote: (id: string) => void;
   addNote: (note: Note) => void;
   editNote: (updatedNote: Note) => void;
@@ -23,7 +23,10 @@ export const useNotes = create<NotesStore>((set) => {
     isFetched: false,
     selectedNote: null,
     setSelectedNote: (selectedNote) => set({ selectedNote }),
-    setNotes: (notes: Note[]) => set({ notes }),
+    setNotes: (notes: Note[] | ((prev: Note[]) => Note[])) =>
+      set((state) => ({
+        notes: typeof notes === "function" ? notes(state.notes) : notes,
+      })),
     removeNote: (id: string) =>
       set((state) => ({
         notes: state.notes.filter((note: Note) => note.id !== id),
@@ -34,8 +37,13 @@ export const useNotes = create<NotesStore>((set) => {
       })),
     editNote: (updatedNote: Note) =>
       set((state) => ({
-        notes: state.notes.map((note: Note) => (note.id === updatedNote.id ? updatedNote : note)),
-        selectedNote: state.selectedNote?.id === updatedNote.id ? updatedNote : state.selectedNote,
+        notes: state.notes.map((note: Note) =>
+          note.id === updatedNote.id ? updatedNote : note,
+        ),
+        selectedNote:
+          state.selectedNote?.id === updatedNote.id
+            ? updatedNote
+            : state.selectedNote,
       })),
   };
 });

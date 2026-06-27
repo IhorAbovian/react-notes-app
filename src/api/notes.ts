@@ -17,8 +17,12 @@ export type Note = {
   updatedAt?: string;
 };
 
-export const fetchNotes = async (options?: { query?: string }) => {
-  const { query = "" } = options || {};
+export const fetchNotes = async (options?: {
+  query?: string;
+  _page?: number;
+  _limit?: number;
+}) => {
+  const { query = "", _page, _limit } = options || {};
 
   try {
     let url = `${BACKEND_URL}/notes`;
@@ -28,6 +32,9 @@ export const fetchNotes = async (options?: { query?: string }) => {
       const where = {
         or: [{ title: { contains: query } }, { tags: { contains: query } }],
       };
+
+      if (_page) params.set("_page", _page.toString());
+      if (_limit) params.set("_limit", _limit.toString());
 
       params.set("_where", JSON.stringify(where));
     }
