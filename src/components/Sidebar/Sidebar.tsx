@@ -5,6 +5,8 @@ import { useNavigate, useParams, useSearchParams } from "react-router";
 import { Badge } from "../ui/badge.tsx";
 import { Separator } from "../ui/separator.tsx";
 import { Button } from "../ui/button.tsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 const LIMIT = 20;
 
@@ -18,10 +20,19 @@ const Sidebar = () => {
   const { notes, setNotes } = useNotes();
 
   const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setNotes([]);
+    setHasMore(true);
+    setPage(1);
+  }, [searchParams]);
 
   useEffect(() => {
     const query = searchParams.get("query") || "";
 
+    setIsLoading(true);
     (async () => {
       const { data } = await fetchNotes({
         query,
@@ -30,7 +41,10 @@ const Sidebar = () => {
       });
 
       setNotes((prev) => [...prev, ...data]);
-    })();
+      if (data.length < LIMIT) {
+        setHasMore(false);
+      }
+    })().finally(() => setIsLoading(false));
   }, [searchParams, page, setNotes]);
 
   const handleNoteClick = (id: string) => {
@@ -103,11 +117,24 @@ const Sidebar = () => {
           </div>
         ))}
       </div>
-      <div className="pt-2">
-        <Button className="w-full" onClick={() => setPage((p) => p + 1)}>
-          Load More
-        </Button>
-      </div>
+      {hasMore && (
+        <div className="pt-2">
+          <Button
+            className="w-full"
+            onClick={() => setPage((p) => p + 1)}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <FontAwesomeIcon icon={faSpinner} spin className="mr-2" />
+                Loading...
+              </>
+            ) : (
+              "Load More"
+            )}
+          </Button>
+        </div>
+      )}
     </aside>
   );
 };

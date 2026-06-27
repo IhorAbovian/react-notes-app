@@ -17,10 +17,12 @@ export type Note = {
   updatedAt?: string;
 };
 
+const LIMIT = 20;
+
 export const fetchNotes = async (options?: {
   query?: string;
   _page?: number;
-  _limit?: number;
+  _limit?: typeof LIMIT;
 }) => {
   const { query = "", _page, _limit } = options || {};
 
@@ -28,14 +30,13 @@ export const fetchNotes = async (options?: {
     let url = `${BACKEND_URL}/notes`;
     const params = new URLSearchParams();
 
+    if (_page) params.set("_page", _page.toString());
+    if (_limit) params.set("_limit", _limit.toString());
+
     if (query) {
       const where = {
         or: [{ title: { contains: query } }, { tags: { contains: query } }],
       };
-
-      if (_page) params.set("_page", _page.toString());
-      if (_limit) params.set("_limit", _limit.toString());
-
       params.set("_where", JSON.stringify(where));
     }
 
@@ -47,7 +48,9 @@ export const fetchNotes = async (options?: {
       throw notesResponse.status;
     }
 
-    const notes = await notesResponse.json();
+    const response = await notesResponse.json();
+
+    const notes = response.data || response;
 
     return { data: notes as Note[], error: null };
   } catch (error) {
