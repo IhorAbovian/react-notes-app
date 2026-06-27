@@ -73,6 +73,34 @@ const Sidebar = () => {
               <p className="mt-0.5 text-xs text-gray-400 line-clamp-2">
                 {note.body}
               </p>
+
+              {note.tags && (
+                <div className="flex flex-wrap gap-1 mt-2">
+                  {(() => {
+                    const tagList =
+                      typeof note.tags === "string"
+                        ? note.tags.split(",")
+                        : note.tags;
+                    return (
+                      <>
+                        {tagList.slice(0, 2).map((tag) => (
+                          <span
+                            key={tag}
+                            className="px-1.5 py-0.5 text-[10px] bg-gray-200 text-gray-600 rounded"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                        {tagList.length > 2 && (
+                          <span className="text-[10px] text-gray-400 self-center">
+                            +{tagList.length - 2}
+                          </span>
+                        )}
+                      </>
+                    );
+                  })()}
+                </div>
+              )}
             </div>
             <Separator className="my-1" />
           </div>
