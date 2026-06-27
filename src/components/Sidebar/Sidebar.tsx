@@ -84,12 +84,9 @@ const Sidebar = () => {
                     return (
                       <>
                         {tagList.slice(0, 2).map((tag) => (
-                          <span
-                            key={tag}
-                            className="px-1.5 py-0.5 text-[10px] bg-gray-200 text-gray-600 rounded"
-                          >
+                          <Badge key={tag} variant="secondary">
                             {tag}
-                          </span>
+                          </Badge>
                         ))}
                         {tagList.length > 2 && (
                           <span className="text-[10px] text-gray-400 self-center">
