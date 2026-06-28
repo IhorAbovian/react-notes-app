@@ -5,7 +5,9 @@ const selectStyles = {
     ...base,
     backgroundColor: "transparent",
     borderColor: state.isFocused ? "var(--ring)" : "var(--input)",
-    boxShadow: state.isFocused ? "0 0 0 3px color-mix(in srgb, var(--ring), transparent 50%)" : "none",
+    boxShadow: state.isFocused
+      ? "0 0 0 3px color-mix(in srgb, var(--ring), transparent 50%)"
+      : "none",
     borderRadius: "0.5rem",
     "&:hover": {
       borderColor: state.isFocused ? "var(--ring)" : "var(--input)",
@@ -20,8 +22,29 @@ const selectStyles = {
     ...base,
     color: "var(--foreground)",
   }),
+  multiValue: (base: any) => ({
+    ...base,
+    maxWidth: "200px",
+  }),
+  multiValueLabel: (base: any) => ({
+    ...base,
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+  }),
 };
 
 export const TagSelect = (props: any) => {
-  return <CreatableSelect {...props} styles={selectStyles} />;
+  const formatCreateLabel = (inputValue: string) => {
+    const trimmed = inputValue.trim().slice(0, 30);
+    return `Create "${trimmed}${inputValue.length > 30 ? "..." : ""}"`;
+  };
+
+  return (
+    <CreatableSelect
+      {...props}
+      styles={selectStyles}
+      formatCreateLabel={formatCreateLabel}
+    />
+  );
 };

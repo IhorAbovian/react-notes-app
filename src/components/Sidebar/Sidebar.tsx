@@ -7,8 +7,7 @@ import { Separator } from "../ui/separator.tsx";
 import { Button } from "../ui/button.tsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-
-const LIMIT = 20;
+import { LIMIT } from "@/utils/constants.ts";
 
 const Sidebar = () => {
   // const { query } = useFilters();
@@ -33,6 +32,7 @@ const Sidebar = () => {
     const query = searchParams.get("query") || "";
 
     setIsLoading(true);
+
     (async () => {
       const { data } = await fetchNotes({
         query,
@@ -41,6 +41,7 @@ const Sidebar = () => {
       });
 
       setNotes((prev) => [...prev, ...data]);
+
       if (data.length < LIMIT) {
         setHasMore(false);
       }
@@ -50,6 +51,7 @@ const Sidebar = () => {
   const handleNoteClick = (id: string) => {
     const params = new URLSearchParams(searchParams);
     const queryString = params.toString();
+
     navigate(`/${id}${queryString ? `?${queryString}` : ""}`);
   };
 
@@ -78,15 +80,12 @@ const Sidebar = () => {
               }`}
             >
               <h3
-                className={`text-sm font-medium ${
+                className={`text-sm font-medium truncate ${
                   noteId === note.id ? "text-indigo-700" : "text-gray-800"
                 }`}
               >
                 {note.title}
               </h3>
-              <p className="mt-0.5 text-xs text-gray-400 line-clamp-2">
-                {note.body}
-              </p>
 
               {note.tags && (
                 <div className="flex flex-wrap gap-1 mt-2">
@@ -95,13 +94,19 @@ const Sidebar = () => {
                       typeof note.tags === "string"
                         ? note.tags.split(",")
                         : note.tags;
+
                     return (
                       <>
                         {tagList.slice(0, 2).map((tag) => (
-                          <Badge key={tag} variant="secondary">
+                          <Badge
+                            key={tag}
+                            variant="secondary"
+                            className="max-w-32 truncate"
+                          >
                             {tag}
                           </Badge>
                         ))}
+
                         {tagList.length > 2 && (
                           <span className="text-[10px] text-gray-400 self-center">
                             +{tagList.length - 2}
@@ -117,6 +122,7 @@ const Sidebar = () => {
           </div>
         ))}
       </div>
+
       {hasMore && (
         <div className="pt-2">
           <Button

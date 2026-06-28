@@ -4,7 +4,6 @@ import { createNote } from "../api/notes.ts";
 import { useNotes } from "../state/notes.ts";
 import { Button } from "../components/ui/button.tsx";
 import { Input } from "../components/ui/input.tsx";
-import { Textarea } from "../components/ui/textarea.tsx";
 import {
   Card,
   CardHeader,
@@ -23,6 +22,8 @@ import { Label } from "../components/ui/label.tsx";
 import { toast } from "sonner";
 import CreatableSelect from "react-select/creatable";
 import { createTag, fetchTags, type Tag } from "@/api/tags.ts";
+import { QuillEditor } from "@/components/data-entry/QuillEditor.tsx";
+import type { Delta } from "quill";
 
 export const AddPage = () => {
   const navigate = useNavigate();
@@ -30,6 +31,7 @@ export const AddPage = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [savedTags, setSavedTags] = useState<Tag[]>([]);
+  const [body, setBody] = useState<Delta | null>(null);
 
   // fetch all tags
   useEffect(() => {
@@ -56,10 +58,8 @@ export const AddPage = () => {
     const form = event.target as HTMLFormElement;
 
     const titleInput = form.title as unknown as HTMLInputElement | null;
-    const bodyTextArea = form.body as unknown as HTMLTextAreaElement | null;
 
     const title = titleInput?.value || "";
-    const body = bodyTextArea?.value || "";
 
     const tags = selectedTag.map((input) => input.value);
 
@@ -131,13 +131,8 @@ export const AddPage = () => {
 
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="body">Body</Label>
-                <Textarea
-                  id="body"
-                  name="body"
-                  placeholder="Write your note here..."
-                  required
-                  className="max-h-75"
-                />
+
+                <QuillEditor onChange={setBody} />
               </div>
 
               <div className="flex flex-col gap-1.5">

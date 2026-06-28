@@ -11,6 +11,7 @@ import { Separator } from "../ui/separator.tsx";
 import { Modal } from "../Modal/Modal.tsx";
 import { Badge } from "../ui/badge.tsx";
 import { toast } from "sonner";
+import { QuillEditor } from "../data-entry/QuillEditor.tsx";
 
 const MainContent = () => {
   const { removeNote } = useNotes();
@@ -176,9 +177,11 @@ const MainContent = () => {
                 {selectedNote.title}
               </h2>
 
-              <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+              {/* <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
                 {selectedNote.body}
-              </p>
+              </p> */}
+
+              <QuillEditor value={selectedNote.body} readOnly />
             </CardContent>
           </Card>
         </div>

@@ -1,8 +1,9 @@
+import type { Delta } from "quill";
 import { BACKEND_URL } from "../utils/constants";
 
 type CreateNoteData = {
   title: string;
-  body: string;
+  body: Delta;
   createdAt?: string;
   tags?: string;
   updatedAt?: string;
@@ -11,7 +12,7 @@ type CreateNoteData = {
 export type Note = {
   id: string;
   title: string;
-  body: string;
+  body: Delta;
   createdAt: string;
   tags?: string;
   updatedAt?: string;
@@ -31,7 +32,7 @@ export const fetchNotes = async (options?: {
     const params = new URLSearchParams();
 
     if (_page) params.set("_page", _page.toString());
-    if (_limit) params.set("_limit", _limit.toString());
+    if (_limit) params.set("_per_page", _limit.toString());
 
     if (query) {
       const where = {
@@ -50,7 +51,7 @@ export const fetchNotes = async (options?: {
 
     const response = await notesResponse.json();
 
-    const notes = response.data || response;
+    const notes = response.data;
 
     return { data: notes as Note[], error: null };
   } catch (error) {
